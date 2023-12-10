@@ -14,13 +14,11 @@ import { useMutation } from "@apollo/client";
 import UserOperations from "@/graphql-client/operations/users";
 import { CreateUserData, CreateUserVariables } from "@/graphql-client/types";
 
-type Props = {
-  reloadSession: () => void;
-};
+type Props = {};
 
 type Varient = "login" | "register";
 
-function AuthForm({ reloadSession }: Props) {
+function AuthForm({}: Props) {
   const [varient, setVarient] = useState<Varient>("login");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -71,7 +69,7 @@ function AuthForm({ reloadSession }: Props) {
               }
 
               if (callback?.ok) {
-                reloadSession();
+                router.push("/conversations");
               }
             }
           );
@@ -125,7 +123,7 @@ function AuthForm({ reloadSession }: Props) {
         }
 
         if (callback?.ok) {
-          reloadSession();
+          router.push("/conversations");
         }
       })
       .finally(() => setIsLoading(false));

@@ -1,32 +1,31 @@
-"use client";
+import Image from "next/image";
+import React from "react";
+import logo from "@/public/images/logo.png";
+import { Session } from "next-auth";
+import AuthForm from "./components/AuthForm";
+type Props = {};
 
-import { useSession } from "next-auth/react";
-import Wrapper from "./components/Conversations/Wrapper";
-import Auth from "./components/Auth/Auth";
-import Loader from "../components/Loader";
-
-export default function Home() {
-  const { data: session, status } = useSession();
-
-  if (status === "loading")
-    return (
-      <div className="h-screen w-screen items-center justify-center flex">
-        <Loader />
-      </div>
-    );
-
-  const reloadSession = () => {
-    const event = new Event("visibilitychange");
-    document.dispatchEvent(event);
-  };
-
+function Auth({}: Props) {
   return (
-    <>
-      {session && session.user?.name ? (
-        <Wrapper session={session} />
-      ) : (
-        <Auth session={session} reloadSession={reloadSession} status={status} />
-      )}
-    </>
+    <div
+      className="
+  flex min-h-screen flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-100"
+    >
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <Image
+          src={logo}
+          alt="logo"
+          height="48"
+          width="48"
+          className="mx-auto w-auto"
+        />
+        <div className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+          Sign in to your account
+        </div>
+      </div>
+      <AuthForm />
+    </div>
   );
 }
+
+export default Auth;

@@ -9,8 +9,7 @@ import {
 } from "@apollo/experimental-nextjs-app-support/ssr";
 
 const GRAPHQL_ENDPOINT =
-  process.env.GRAPHQL_ENDPOINT ||
-  "https://messenger-seven-rho.vercel.app/api/graphql";
+  process.env.GRAPHQL_ENDPOINT || "http://localhost:3000/api/graphql";
 
 function makeClient() {
   const httpLink = new HttpLink({
