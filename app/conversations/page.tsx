@@ -4,9 +4,14 @@ import clsx from "clsx";
 
 import useConversation from "../hooks/useConversation";
 import EmptyState from "../components/EmptyState";
+import { getSession, useSession } from "next-auth/react";
+import { NextPageContext } from "next";
 
 const Home = () => {
   const { isOpen } = useConversation();
+
+  const session = useSession();
+  console.log("session", session);
 
   return (
     <div

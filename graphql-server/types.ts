@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { Conversation, Message, User } from "@prisma/client";
 
 export interface CreateUserResponse {
   success?: boolean;
@@ -8,4 +8,19 @@ export interface CreateUserResponse {
 export interface getUserResponse {
   error?: string;
   user?: User;
+}
+
+export interface getMessagesResponse {
+  error?: string;
+  messages?: Message[];
+}
+
+export interface getConversationByIdResponse {
+  error?: string;
+  conversation?: Conversation;
+}
+
+export interface createMessageResponse {
+  success?: boolean;
+  error?: string;
 }

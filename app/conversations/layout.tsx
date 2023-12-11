@@ -6,6 +6,11 @@ import ConversationList from "./components/ConversationList";
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import UsersOperations from "@/graphql-client/operations/users";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import Loader from "../components/Loader";
+import { NextPageContext } from "next";
+import { getSession, useSession } from "next-auth/react";
 
 export default function ConversationsLayout({
   children,
@@ -13,23 +18,34 @@ export default function ConversationsLayout({
   children: React.ReactNode;
 }) {
   const [users, setUsers] = useState<User[]>([] as User[]);
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { data, error, loading } = useQuery<any>(
     UsersOperations.Query.getUsers,
     {
       variables: {
-        email: "21f1004807@ds.study.iitm.ac.in",
+        email: session?.user?.email,
       },
     }
   );
 
   useEffect(() => {
-    if (data && data.getUsers && data.getUsers) {
-      setUsers(data.getUsers);
+    if (session?.user?.email && status === "authenticated") {
+      if (data && data.getUsers && data.getUsers) {
+        setUsers(data.getUsers);
+      }
+    } else if (status !== "authenticated" && status !== "loading") {
+      toast.dismiss();
+      toast.error("Please Login to continue!");
+      router.push("/");
     }
-  }, [data]);
+  }, [data, session, status]);
 
   const conversations: any = [];
+
+  console.log("getUsers", data);
 
   return (
     <Sidebar>
