@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import Loader from "../components/Loader";
 import { NextPageContext } from "next";
 import { getSession, useSession } from "next-auth/react";
+import ConversationOperations from "@/graphql-client/operations/conversations";
 
 export default function ConversationsLayout({
   children,
@@ -18,6 +19,7 @@ export default function ConversationsLayout({
   children: React.ReactNode;
 }) {
   const [users, setUsers] = useState<User[]>([] as User[]);
+  const [conversations, setConversations] = useState<any[]>([]);
   const { data: session, status } = useSession();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -31,21 +33,40 @@ export default function ConversationsLayout({
     }
   );
 
+  const {
+    data: conversationData,
+    error: conversationError,
+    loading: conversationLoading,
+  } = useQuery<any>(ConversationOperations.Query.getConversations);
+
+  const {
+    data: usersData,
+    error: usersError,
+    loading: usersLoading,
+  } = useQuery(UsersOperations.Query.getUsers, {
+    variables: {
+      email: session?.user?.email,
+    },
+  });
+
   useEffect(() => {
     if (session?.user?.email && status === "authenticated") {
-      if (data && data.getUsers && data.getUsers) {
-        setUsers(data.getUsers);
+      if (usersData && usersData.getUsers && usersData.getUsers) {
+        setUsers(usersData.getUsers);
+      }
+      if (
+        conversationData &&
+        conversationData.getConversations &&
+        conversationData.getConversations
+      ) {
+        setConversations(conversationData.getConversations);
       }
     } else if (status !== "authenticated" && status !== "loading") {
       toast.dismiss();
       toast.error("Please Login to continue!");
       router.push("/");
     }
-  }, [data, session, status]);
-
-  const conversations: any = [];
-
-  console.log("getUsers", data);
+  }, [usersData, session, status]);
 
   return (
     <Sidebar>

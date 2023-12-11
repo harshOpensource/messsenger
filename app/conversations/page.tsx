@@ -10,9 +10,6 @@ import { NextPageContext } from "next";
 const Home = () => {
   const { isOpen } = useConversation();
 
-  const session = useSession();
-  console.log("session", session);
-
   return (
     <div
       className={clsx("lg:pl-80 h-full lg:block", isOpen ? "block" : "hidden")}

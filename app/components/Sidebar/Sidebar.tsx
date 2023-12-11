@@ -5,15 +5,17 @@ import DesktopSidebar from "./DesktopSidebar";
 import MobileFooter from "./MobileFooter";
 import UsersOperations from "@/graphql-client/operations/users";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 function Sidebar({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState(null);
+  const session = useSession();
 
   const { data, error, loading } = useQuery<any>(
     UsersOperations.Query.getCurrentUser,
     {
       variables: {
-        email: "21f1004807@ds.study.iitm.ac.in",
+        email: session?.data?.user?.email,
       },
     }
   );
@@ -24,8 +26,6 @@ function Sidebar({ children }: { children: React.ReactNode }) {
       setCurrentUser(data.getCurrentUser.user);
     }
   }, [data]);
-
-  console.log("TEST", { currentUser });
 
   return (
     <div className="h-full">
